@@ -19,4 +19,17 @@ import java.util.List;
 public class KeywordsRelationVO {
     private List<Keywords> keywords;
     private List<KeywordsRelation> relationList;
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class KeywordsRelation {
+        private Integer startNodeId;
+        private Integer endNodeId;
+        private Integer relationId;
+        private Integer relationWeight;
+
+    }
 }
+
