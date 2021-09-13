@@ -14,6 +14,6 @@ import java.util.List;
  */
 public interface KeywordsRepository extends Neo4jRepository<Keywords, Long> {
 
-    @Query(" match (n:Keywords{appId:$appId})--(x:Keywords{appId:$appId})  return distinct x")
+    @Query(" match (n:Keywords{appId:$appId})--(x:Keywords{appId:$appId}) return distinct x")
     List<Keywords> getAllNode(@Param("appId") String appId);
 }

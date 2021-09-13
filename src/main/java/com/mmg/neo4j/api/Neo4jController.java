@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Auther: fan
@@ -35,7 +33,7 @@ public class Neo4jController {
         Collection<KeywordsRelationVO.KeywordsRelation> result = neo4jClient.query("match (x:Keywords{appId: '" + appId + "' })-[y:BIND]->" +
                 "(z:Keywords{appId: '" + appId + "'})" +
                 "return id(x) as startNodeId,id(y) as relationId,y.weight as relationWeight, id(z) as endNodeId")
-//                .in("neo4j")
+                .in("neo4j")
                 .fetchAs(KeywordsRelationVO.KeywordsRelation.class)
                 .mappedBy((TypeSystem t, Record record) -> KeywordsRelationVO.KeywordsRelation.builder()
                         .startNodeId(record.get("startNodeId").asInt())
@@ -49,5 +47,4 @@ public class Neo4jController {
         List<Keywords> keywords = keywordsRepository.getAllNode(appId);
         return KeywordsRelationVO.builder().keywords(keywords).relationList(relations).build();
     }
-
 }
