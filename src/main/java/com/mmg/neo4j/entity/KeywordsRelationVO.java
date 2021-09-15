@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.w3c.dom.Node;
 
 import java.util.List;
 
@@ -17,19 +18,38 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class KeywordsRelationVO {
-    private List<Keywords> keywords;
-    private List<KeywordsRelation> relationList;
+    private List<Node> nodes;
+    private List<Link> links;
+    private List<Categories> categories;
 
     @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class KeywordsRelation {
-        private Integer startNodeId;
-        private Integer endNodeId;
-        private Integer relationId;
-        private Integer relationWeight;
+    public static class Link {
+        private String source;
+        private String target;
+    }
 
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Node{
+        private String id;
+        private String name;
+        private Float symbolSize;
+        private Float x;
+        private Float y;
+        private Integer category;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Categories{
+        private String name;
     }
 }
 
