@@ -1,6 +1,5 @@
 package com.mmg.neo4j.api;
 
-import cn.hutool.core.util.RandomUtil;
 import com.mmg.neo4j.entity.Keywords;
 import com.mmg.neo4j.entity.KeywordsRelationVO;
 import com.mmg.neo4j.repository.KeywordsRepository;
@@ -13,7 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @Auther: fan
@@ -42,63 +44,47 @@ public class Neo4jController {
                 .mappedBy((TypeSystem t, Record record) -> {
                     int startNodeId = record.get("startNodeId").asInt();
                     int endNodeId = record.get("endNodeId").asInt();
+                    String weight = record.get("relationWeight").asString();
                     return KeywordsRelationVO.Link.builder()
                             .source(String.valueOf(startNodeId))
                             .target(String.valueOf(endNodeId))
+                            .weight(weight)
                             .build();
                 })
                 .all();
         List<KeywordsRelationVO.Link> links = new ArrayList<>(result);
         //拿到有所有有关系的节点
-//        List<Keywords> keywords = keywordsRepository.getAllNode(appId);
-        List<Keywords> keywords = keywordsRepository.findAll();
+        List<Keywords> keywords = keywordsRepository.getAllNode(appId);
+//        List<Keywords> keywords = keywordsRepository.findAll();
+        System.out.println(keywords.size());
         List<KeywordsRelationVO.Node> nodes = new ArrayList<>();
         keywords.forEach(item -> {
             try {
-                nodes.add(KeywordsRelationVO.Node.builder()
+                Random random = new Random(item.getWords().hashCode());
+                KeywordsRelationVO.Node node = KeywordsRelationVO.Node.builder()
                         .id(item.getId().toString())
                         .name(item.getWords())
-                        .symbolSize(Float.valueOf(item.getFrequency()))
-                        .x(nextFloat(-700, 400))
-                        .y(nextFloat(50, 500))
-                        .category(nextInt(0, 9))
-                        .build());
+                        .symbolSize(Integer.parseInt(item.getFrequency()) / 3)
+                        .category(random.nextInt(11))
+                        .build();
+                if (Integer.parseInt(item.getFrequency()) > 50) {
+                    node.setX(random.nextInt(50));
+                    node.setY(random.nextInt(50));
+                } else {
+                    node.setX(random.nextInt(100));
+                    node.setY(random.nextInt(100));
+                }
+                nodes.add(node);
             } catch (Exception e) {
                 log.error(e.getMessage());
             }
         });
         List<KeywordsRelationVO.Categories> categories = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 12; i++) {
             categories.add(KeywordsRelationVO.Categories.builder().name("类目" + i).build());
         }
         System.out.println((System.currentTimeMillis() - l) + "ms");
         return KeywordsRelationVO.builder().nodes(nodes).links(links).categories(categories).build();
-    }
-
-    private static Set<Float> set = new HashSet<>();
-
-    public static int nextInt(final int min, final int max) {
-        return RandomUtil.randomInt(min, max);
-    }
-
-    public static float nextFloat(final float min, final float max) throws Exception {
-        if (max < min) {
-            throw new Exception("min < max");
-        }
-        if (min == max) {
-            return min;
-        }
-        float a = 0;
-        while (set.add(a)) {
-            a = min + ((max - min) * new Random().nextFloat());
-        }
-        if (a != 0) {
-            return a;
-        } else {
-            return min + ((max - min) * new Random().nextFloat());
-        }
-
-
     }
 
 }

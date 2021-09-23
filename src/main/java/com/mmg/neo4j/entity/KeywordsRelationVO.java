@@ -29,6 +29,7 @@ public class KeywordsRelationVO {
     public static class Link {
         private String source;
         private String target;
+        private String weight;
     }
 
     @Data
@@ -38,9 +39,9 @@ public class KeywordsRelationVO {
     public static class Node{
         private String id;
         private String name;
-        private Float symbolSize;
-        private Float x;
-        private Float y;
+        private Integer symbolSize;
+        private Integer x;
+        private Integer y;
         private Integer category;
     }
 

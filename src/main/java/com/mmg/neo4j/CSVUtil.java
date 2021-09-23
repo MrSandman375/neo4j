@@ -13,13 +13,13 @@ import java.nio.charset.StandardCharsets;
  */
 public class CSVUtil {
     public static void main(String[] args) throws IOException {
-        String readFile = "C:/Users/Fan/Desktop/relation.csv";
-        String writeFile = "C:/Users/Fan/Desktop/relation1.csv";
+        String readFile = "C:/software/neo4j-community-4.3.3/import/relation.csv";
+        String writeFile = "C:/software/neo4j-community-4.3.3/import/relation1.csv";
         CsvReader csvReader = new CsvReader(readFile, ',', StandardCharsets.UTF_8);
         CsvWriter csvWriter = new CsvWriter(writeFile, ',', StandardCharsets.UTF_8);
         while (csvReader.readRecord()) {
             String s = csvReader.get(2);
-            if (Integer.parseInt(s) > 5) {
+            if (Integer.parseInt(s) > 4) {
                 csvWriter.writeRecord(csvReader.getValues());
             }
         }
